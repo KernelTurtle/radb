@@ -575,7 +575,7 @@ impl<E: Engine> Transaction<E> {
 
     /// Returns an iterator over the latest visible key/value pairs at the
     /// transaction's version.
-    pub fn scan<R: RangeBounds<Vec<u8>>>(&self, range: R) -> Result<Scan<E>> {
+    pub fn scan<R: RangeBounds<Vec<u8>>>(&self, range: R) -> Result<Scan<'_, E>> {
         let start = match range.start_bound() {
             Bound::Excluded(k) => Bound::Excluded(Key::Version(k.into(), u64::MAX).encode()?),
             Bound::Included(k) => Bound::Included(Key::Version(k.into(), 0).encode()?),
@@ -590,7 +590,7 @@ impl<E: Engine> Transaction<E> {
     }
 
     /// Scans keys under a given prefix.
-    pub fn scan_prefix(&self, prefix: &[u8]) -> Result<Scan<E>> {
+    pub fn scan_prefix(&self, prefix: &[u8]) -> Result<Scan<'_, E>> {
         // Normally, KeyPrefix::Version will only match all versions of the
         // exact given key. We want all keys maching the prefix, so we chop off
         // the KeyCode byte slice terminator 0x0000 at the end.

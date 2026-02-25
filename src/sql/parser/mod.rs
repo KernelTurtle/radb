@@ -16,7 +16,7 @@ pub struct Parser<'a> {
 
 impl Parser<'_> {
     /// Creates a new parser for the given string input
-    pub fn new(query: &str) -> Parser {
+    pub fn new(query: &str) -> Parser<'_> {
         Parser { lexer: Lexer::new(query).peekable() }
     }
 
